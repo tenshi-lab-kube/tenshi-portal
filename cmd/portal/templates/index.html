@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ .Title }}</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-lockup">
+        <div class="brand-mark" aria-hidden="true">TL</div>
+        <div><p class="eyebrow">{{ .Environment }}</p><h1>{{ .Title }}</h1></div>
+      </div>
+      <div class="topbar-meta"><span>Cluster services</span><strong>{{ .UpdatedAt }}</strong></div>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="intro-title">
+        <div><p class="eyebrow">Service directory</p><h2 id="intro-title">{{ .Subtitle }}</h2></div>
+        <p class="intro-copy">Un point d'entree propre pour les outils d'identite, d'observabilite, de GitOps et les applications metier du lab.</p>
+      </section>
+      <section class="service-grid" aria-label="Services disponibles">
+        {{ range .Services }}
+        <article class="service-card service-card--{{ .Accent }}">
+          <div class="service-card-top"><div class="service-icon" aria-hidden="true">{{ .Initials }}</div><span class="status-pill">{{ .Status }}</span></div>
+          <div class="service-body"><p class="service-kind">{{ .Kind }}</p><h3>{{ .Name }}</h3><p>{{ .Description }}</p></div>
+          <a class="service-link" href="{{ .URL }}" rel="noopener">Ouvrir <span aria-hidden="true">-></span></a>
+        </article>
+        {{ end }}
+      </section>
+    </main>
+  </div>
+</body>
+</html>
