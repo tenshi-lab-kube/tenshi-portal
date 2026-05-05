@@ -7,29 +7,57 @@
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div class="brand-lockup">
-        <div class="brand-mark" aria-hidden="true">TL</div>
-        <div><p class="eyebrow">{{ .Environment }}</p><h1>{{ .Title }}</h1></div>
+  <div class="app">
+
+    <header class="header">
+      <div class="header-left">
+        <div class="logo" aria-hidden="true">TL</div>
+        <div class="header-text">
+          <div class="header-top">
+            <h1 class="site-name">{{ .Title }}</h1>
+            <span class="env-badge">{{ .Environment }}</span>
+          </div>
+          <p class="site-desc">{{ .Subtitle }}</p>
+        </div>
       </div>
-      <div class="topbar-meta"><span>Cluster services</span><strong>{{ .UpdatedAt }}</strong></div>
+      <div class="header-right">
+        <span class="meta-label">Mis à jour le</span>
+        <time class="meta-time">{{ .UpdatedAt }}</time>
+      </div>
     </header>
-    <main>
-      <section class="intro" aria-labelledby="intro-title">
-        <div><p class="eyebrow">Service directory</p><h2 id="intro-title">{{ .Subtitle }}</h2></div>
-        <p class="intro-copy">Un point d'entree propre pour les outils d'identite, d'observabilite, de GitOps et les applications metier du lab.</p>
-      </section>
-      <section class="service-grid" aria-label="Services disponibles">
-        {{ range .Services }}
-        <article class="service-card service-card--{{ .Accent }}">
-          <div class="service-card-top"><div class="service-icon" aria-hidden="true">{{ .Initials }}</div><span class="status-pill">{{ .Status }}</span></div>
-          <div class="service-body"><p class="service-kind">{{ .Kind }}</p><h3>{{ .Name }}</h3><p>{{ .Description }}</p></div>
-          <a class="service-link" href="{{ .URL }}" rel="noopener">Ouvrir <span aria-hidden="true">-></span></a>
-        </article>
-        {{ end }}
-      </section>
+
+    <div class="section-bar">
+      <span class="section-label">Services</span>
+      <span class="section-rule" aria-hidden="true"></span>
+    </div>
+
+    <main class="service-grid" aria-label="Services disponibles">
+      {{ range .Services }}
+      <article class="card card--{{ .Accent }}">
+        <div class="card-header">
+          <div class="card-icon" aria-hidden="true">{{ .Initials }}</div>
+          <div class="card-tags">
+            <span class="card-kind">{{ .Kind }}</span>
+            <span class="card-status">
+              <span class="status-dot" aria-hidden="true"></span>
+              {{ .Status }}
+            </span>
+          </div>
+        </div>
+        <div class="card-body">
+          <h3 class="card-name">{{ .Name }}</h3>
+          <p class="card-desc">{{ .Description }}</p>
+        </div>
+        <a class="card-link" href="{{ .URL }}" rel="noopener">
+          <span>Ouvrir le service</span>
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" aria-hidden="true">
+            <path d="M1 10L10 1M10 1H4M10 1V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </article>
+      {{ end }}
     </main>
+
   </div>
 </body>
 </html>
