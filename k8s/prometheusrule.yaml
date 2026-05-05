@@ -1,0 +1,51 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: tenshi-portal-alerts
+  namespace: tenshi-portal
+  labels:
+    release: monitoring
+    app.kubernetes.io/name: tenshi-portal
+spec:
+  groups:
+    - name: tenshi-portal.rules
+      rules:
+        - alert: TenshiPortalDown
+          expr: absent(tenshi_portal_up) or tenshi_portal_up == 0
+          for: 2m
+          labels:
+            severity: critical
+            service: tenshi-portal
+          annotations:
+            summary: Tenshi Portal ne repond plus aux scrapes Prometheus
+            description: La metrique tenshi_portal_up est absente ou vaut 0 depuis plus de 2 minutes.
+        - alert: TenshiPortalHighHttpErrorRate
+          expr: |
+            sum(rate(tenshi_portal_http_requests_total{status=~"5.."}[5m]))
+            /
+            clamp_min(sum(rate(tenshi_portal_http_requests_total[5m])), 0.001) > 0.05
+          for: 10m
+          labels:
+            severity: warning
+            service: tenshi-portal
+          annotations:
+            summary: Taux d'erreurs HTTP eleve sur Tenshi Portal
+            description: Plus de 5% des requetes HTTP retournent une erreur 5xx depuis 10 minutes.
+        - alert: TenshiPortalMemoryHigh
+          expr: container_memory_working_set_bytes{namespace="tenshi-portal",container="app"} > 80 * 1024 * 1024
+          for: 10m
+          labels:
+            severity: warning
+            service: tenshi-portal
+          annotations:
+            summary: Memoire elevee sur Tenshi Portal
+            description: Le conteneur approche la limite memoire de 96Mi.
+        - alert: TenshiPortalPodRestarting
+          expr: increase(kube_pod_container_status_restarts_total{namespace="tenshi-portal",container!="POD"}[15m]) > 0
+          for: 0m
+          labels:
+            severity: warning
+            service: tenshi-portal
+          annotations:
+            summary: Pod Tenshi Portal redemarre
+            description: Un conteneur Tenshi Portal a redemarre au moins une fois sur les 15 dernieres minutes.
