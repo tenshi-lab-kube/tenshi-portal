@@ -27,11 +27,13 @@ type PageData struct {
 	Subtitle    string
 	Environment string
 	UpdatedAt   string
+	CSSVersion  string
 	Services    []Service
 }
 
 func main() {
 	port := env("PORT", "8080")
+	cssVersion := time.Now().Format("20060102150405")
 	tmpl := template.Must(template.ParseFS(content, "templates/*.html"))
 
 	services := []Service{
@@ -52,7 +54,7 @@ func main() {
 			http.NotFound(w, r)
 			return
 		}
-		data := PageData{Title: "Tenshi Lab", Subtitle: "Console d'acces aux services du cluster Kubernetes.", Environment: env("PORTAL_ENV", "Homelab"), UpdatedAt: time.Now().Format("02 Jan 2006 15:04"), Services: services}
+		data := PageData{Title: "Tenshi Lab", Subtitle: "Console d'acces aux services du cluster Kubernetes.", Environment: env("PORTAL_ENV", "Homelab"), UpdatedAt: time.Now().Format("02 Jan 2006 15:04"), CSSVersion: cssVersion, Services: services}
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		if err := tmpl.ExecuteTemplate(w, "index.html", data); err != nil {
 			log.Printf("render error: %v", err)
