@@ -3,6 +3,8 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - deployment.yaml
+  - service-app.yaml
+  - oauth2-proxy.yaml
   - service.yaml
   - servicemonitor.yaml
   - prometheusrule.yaml
