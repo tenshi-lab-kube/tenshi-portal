@@ -8,7 +8,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app.kubernetes.io/name: tenshi-portal
+    app.kubernetes.io/name: tenshi-portal-auth
   ports:
     - name: http
       port: 8080
